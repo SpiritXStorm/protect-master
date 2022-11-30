@@ -1,0 +1,20 @@
+name: Merge Check
+
+on: 
+  pull_request:
+    branches:
+     - 'main/**'
+     - 'master/**'
+
+jobs:
+  approved:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check source branch opposite
+        if: ${{ startsWith(github.head_ref, 'release/') || startsWith(github.head_ref, 'hotfix/') }}
+        run: echo ${{ github.head_ref }}
+      - name: check source branch
+        if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
+        run: |
+          echo "Only release/ and hotfix/ branch can be merged to ${{ github.base_ref }}"
+          exit 1
