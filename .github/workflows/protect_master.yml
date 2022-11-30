@@ -1,13 +1,15 @@
 name: Merge Check
 
 on:
-  pull_request:
+  pull_request_review:
+    types: [submitted]
     branches:
       - main
       - master
 
 jobs:
   approved:
+    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
       - name: check source branch
