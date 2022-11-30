@@ -1,3 +1,2 @@
 # protect-master
-# release
 uat
