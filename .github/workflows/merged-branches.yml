@@ -21,10 +21,9 @@ jobs:
         run: git fetch
 
       - name: Run git diff
-        id: git-diff
         run: |
           diff=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE "origin/${{ github.base_ref }}|origin/${{ github.head_ref }}" | grep ">" | sed 's/>   origin\///g')
-          echo "$diff"
+          echo "{git-diff}={$diff}" >> $GITHUB_OUTPUT
           
       - name: echo git diff
         id: echo 
