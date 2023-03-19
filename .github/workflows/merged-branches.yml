@@ -10,9 +10,6 @@ jobs:
   diff:
     runs-on: ubuntu-latest
 
-    outputs:
-      merged-branches: ${{ steps.git-diff.outputs.diff }}
-
     steps:    
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,21 +20,22 @@ jobs:
       - name: Run git diff
         run: |
           diff=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE "origin/${{ github.base_ref }}|origin/${{ github.head_ref }}" | grep ">" | sed 's/>   origin\///g')
-          echo "git-diff=$diff" >> "$GITHUB_OUTPUT"
+          printf -v escaped_value '%q' "$diff"
+          echo "diff=${escaped_value}" >> "$GITHUB_OUTPUT"
+
           
       - name: echo git diff
         id: echo 
         run: |
-          echo ${{ steps.git-diff.outputs.merged-branches }}
           echo "test"
-          echo ${{ steps.git-diff.outputs.git-diff }}
+          echo ${{ steps.git-diff.outputs.diff }}
           
       - name: Post to a Slack channel
-        if: ${{ steps.git-diff.outputs.merged-branches != '' }}
+        if: ${{ steps.git-diff.outputs.diff != '' }}
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.diff.outputs.merged-branches }}"
+          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.git-diff.outputs.diff }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
