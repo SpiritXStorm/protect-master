@@ -50,13 +50,17 @@ jobs:
           payload: |
             {
               "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}",
-              "blocks": [
+              "attachments": [
                 {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ steps.git-diff.outputs.diff }}"
-                  }
+                  "pretext": "${{ steps.git-diff.outputs.diff }}",
+                  "color": "dbab09",
+                  "fields": [
+                    {
+                      "title": "Branches",
+                      "short": true,
+                      "value": "${{ steps.git-diff.outputs.diff }}"
+                    }
+                  ]
                 }
               ]
             }
