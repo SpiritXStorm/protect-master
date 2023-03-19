@@ -27,11 +27,11 @@ jobs:
           echo "$diff"
           
       - name: Post to a Slack channel
-        if: ${{ steps.git-diff.outputs.diff != '' }}
+        if: ${{ steps.git-diff.outputs.merged-branches != '' }}
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.diff.outputs.diff }}"
+          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.diff.outputs.merged-branches }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
