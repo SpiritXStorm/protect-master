@@ -37,18 +37,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          payload: |
-            {
-              "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ steps.git-diff.outputs.diff }}"
-                  }
-                }
-              ]
-            }
+          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.git-diff.outputs.diff }}"
+
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
