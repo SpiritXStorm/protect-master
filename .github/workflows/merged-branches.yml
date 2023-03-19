@@ -12,14 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:    
-    - name: Checkout master branch
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.base_ref }}
-    - name: Checkout release / hotgix branch
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
-    - name: Run diff
-      run: |
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch latest changes
+        run: git fetch
+
+      - name: Run git diff
+        run: |
           diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -v '${{ github.base_ref }}|${{ github.head_ref }}'
