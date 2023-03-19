@@ -20,4 +20,4 @@ jobs:
 
       - name: Run git diff
         run: |
-          diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -v '${{ github.base_ref }}|${{ github.head_ref }}'
+          diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -v '${{ github.base_ref }}|${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g'
