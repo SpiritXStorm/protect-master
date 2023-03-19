@@ -33,12 +33,12 @@ jobs:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
             {
+              "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}:", 
               "attachments": [
                 {
                   "color": "0063ff",
                   "fields": [
                     {
-                      "title": "Following branch(es) are going to be merged into ${{ github.base_ref }}:", 
                       "short": true,
                       "value": "${{ steps.git-diff.outputs.diff }}"
                     }
