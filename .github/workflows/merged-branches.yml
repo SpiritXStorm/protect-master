@@ -44,7 +44,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ${{ steps.git-diff.outputs.diff }}
+                    "text": "${{ steps.git-diff.outputs.diff }}"
                   }
                 }
               ]
