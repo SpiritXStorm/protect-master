@@ -33,10 +33,10 @@ jobs:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
             {
-              "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}",
+              "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}:",
               "attachments": [
                 {
-                  "color": "01307a",
+                  "color": "0063ff",
                   "fields": [
                     {
                       "title": "Branches",
@@ -47,6 +47,5 @@ jobs:
                 }
               ]
             }
-
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
