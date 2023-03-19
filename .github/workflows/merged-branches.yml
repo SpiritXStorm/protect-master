@@ -10,6 +10,9 @@ jobs:
   diff:
     runs-on: ubuntu-latest
 
+    outputs:
+      merged-branches: ${{ steps.git-diff.outputs.diff }}
+
     steps:    
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,9 +21,10 @@ jobs:
         run: git fetch
 
       - name: Run git diff
-        id: git-diff  
-        run: echo "diff=(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE 'origin/${{ github.base_ref }}|origin/${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g')" >> $GITHUB_OUTPUT
-
+        run: |
+          diff=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE "origin/${{ github.base_ref }}|origin/${{ github.head_ref }}" | grep ">" | sed 's/>   origin\///g')
+          echo "$diff"
+          
       - name: Post to a Slack channel
         if: ${{ steps.git-diff.outputs.diff != '' }}
         id: slack
