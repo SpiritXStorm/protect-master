@@ -7,44 +7,6 @@ on:
     types: [opened, reopened]
 
 jobs:
-  diff:
-    runs-on: ubuntu-latest
-
-    steps:    
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Fetch latest changes
-        run: git fetch
-
-      - name: Run git diff
-        id: git-diff
-        run: |
-          diff=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE "origin/${{ github.base_ref }}|origin/${{ github.head_ref }}" | grep ">" | sed 's/>   origin\///g')
-          printf -v escaped_value '%q' "$diff"
-          escaped_value=$(echo "$escaped_value" | sed "s/^\$'//; s/'$//")
-          echo "diff=${escaped_value}" >> "$GITHUB_OUTPUT"
-          
-      - name: Post to a Slack channel
-        if: ${{ steps.git-diff.outputs.diff != '' }}
-        id: slack
-        uses: slackapi/slack-github-action@v1.23.0
-        with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-          payload: |
-            {
-              "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}:", 
-              "attachments": [
-                {
-                  "color": "0063ff",
-                  "fields": [
-                    {
-                      "short": true,
-                      "value": "${{ steps.git-diff.outputs.diff }}"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  call-workflow:
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-merged-branch.yml@main
+    secrets: inherit
