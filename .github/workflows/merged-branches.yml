@@ -30,6 +30,16 @@ jobs:
         run: |
           echo "test"
           echo ${{ steps.git-diff.outputs.diff }}
+     
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: github-slack-test
+          SLACK_COLOR: good
+          SLACK_MESSAGE: ${{ steps.git-diff.outputs.diff }}
+          SLACK_TITLE: Following branch(es) are going to be merged into ${{ github.base_ref }}
+          SLACK_USERNAME: GitHub
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           
       - name: Post to a Slack channel
         if: ${{ steps.git-diff.outputs.diff != '' }}
