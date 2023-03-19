@@ -23,4 +23,4 @@ jobs:
         ref: ${{ github.head_ref }}
     - name: Run diff
       run: |
-          git diff ${{ github.base_ref }} ${{ github.head_ref }}    
+          diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -v 'origin/${{ github.base_ref }}|origin/${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g'
