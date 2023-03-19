@@ -25,22 +25,6 @@ jobs:
           escaped_value=$(echo "$escaped_value" | sed "s/^\$'//; s/'$//")
           echo "diff=${escaped_value}" >> "$GITHUB_OUTPUT"
           
-      - name: echo git diff
-        id: echo 
-        run: |
-          echo "test"
-          echo ${{ steps.git-diff.outputs.diff }}
-     
-      - name: Slack Notification
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: github-slack-test
-          SLACK_COLOR: good
-          SLACK_MESSAGE: ${{ steps.git-diff.outputs.diff }}\ntest
-          SLACK_TITLE: Following branch(es) are going to be merged into ${{ github.base_ref }}
-          SLACK_USERNAME: GitHub
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          
       - name: Post to a Slack channel
         if: ${{ steps.git-diff.outputs.diff != '' }}
         id: slack
@@ -52,8 +36,7 @@ jobs:
               "text": "Following branch(es) are going to be merged into ${{ github.base_ref }}",
               "attachments": [
                 {
-                  "pretext": "${{ steps.git-diff.outputs.diff }}",
-                  "color": "dbab09",
+                  "color": "01307a",
                   "fields": [
                     {
                       "title": "Branches",
