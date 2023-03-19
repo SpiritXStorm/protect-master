@@ -22,7 +22,7 @@ jobs:
         run: |
           diff=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE "origin/${{ github.base_ref }}|origin/${{ github.head_ref }}" | grep ">" | sed 's/>   origin\///g')
           printf -v escaped_value '%q' "$diff"
-          echo "diff=${escaped_value}" >> "$GITHUB_OUTPUT"
+          echo "diff=${diff}" >> "$GITHUB_OUTPUT"
 
           
       - name: echo git diff
