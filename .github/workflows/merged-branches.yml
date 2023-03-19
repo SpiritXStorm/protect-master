@@ -28,7 +28,7 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: ${{SLACK_CHANNEL_ID}}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.diff.outputs.output }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
