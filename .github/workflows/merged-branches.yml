@@ -1,0 +1,27 @@
+name: List merged branches
+
+on:
+  pull_request:
+    branches: 
+      - main
+    types: [closed]
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.merged }}
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:    
+    - name: Checkout master branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.base_ref }}
+    - name: Checkout release / hotgix branch
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Run diff
+      run: |
+          diff <(git branch -r --merged ${{ github.base_ref }}) <(git branch -r --merged ${{ github.head_ref }}) | grep -v '${{ github.base_ref }}|${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g'
+    
