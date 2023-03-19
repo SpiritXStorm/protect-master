@@ -3,12 +3,11 @@ name: List merged branches
 on:
   pull_request:
     branches: 
-      - main
+      [main, master]
     types: [opened, reopened]
 
 jobs:
-  build:
-    name: build
+  diff:
     runs-on: ubuntu-latest
 
     steps:    
@@ -19,5 +18,17 @@ jobs:
         run: git fetch
 
       - name: Run git diff
+        id: git-diff
         run: |
-          diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE '${{ github.base_ref }}|${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g'
+          output=$(diff <(git branch -r --merged origin/${{ github.base_ref }}) <(git branch -r --merged origin/${{ github.head_ref }}) | grep -vE 'origin/${{ github.base_ref }}|origin/${{ github.head_ref }}' | grep ">" | sed 's/>   origin\///g')
+          echo "::set-output name=output::$output"
+      
+      - name: Post to a Slack channel
+        if: ${{ steps.git-diff.outputs.output != '' }}
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: ${{SLACK_CHANNEL_ID}}
+          slack-message: "Following branch(es) going to be merged to ${{ github.base_ref }}:\n${{ steps.diff.outputs.output }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
