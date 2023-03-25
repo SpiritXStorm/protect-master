@@ -10,6 +10,8 @@ jobs:
   call-workflow:
     uses: SpiritXStorm/github-workflows/.github/workflows/slack-merged-branch.yml@main
     secrets: inherit
+    with:
+      channelId: ${{ vars.SLACK_CHANNEL_ID }}
     
   call-lighthouse-workflow:
     needs: call-workflow
