@@ -16,6 +16,6 @@ jobs:
     uses: SpiritXStorm/github-workflows/.github/workflows/slack-lighthouse.yml@main
     secrets: inherit
     with:
-      urls: 'https://total-party-ltd-ta-balloon-market-store-1-sandbox.mybigcommerce.com,https://total-party-ltd-ta-balloon-market-store-1-sandbox.mybigcommerce.com/balloons,https://total-party-ltd-ta-balloon-market-store-1-sandbox.mybigcommerce.com/super-stuffer-easter-bunny-package-1/'
+      urls: ${{ LIGHTHOUSE_URLS }}
 
   
