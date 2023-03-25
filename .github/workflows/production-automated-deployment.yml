@@ -1,0 +1,47 @@
+name: List merged branches
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  call-slack-message:
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-message.yml@main
+    secrets: inherit
+    with:
+      channelId: ${{ vars.SLACK_CHANNEL_ID }}
+      message: "Deploying LIVE"
+      
+  call-workflow:
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-merged-branch.yml@main
+    secrets: inherit
+    with:
+      channelId: ${{ vars.SLACK_CHANNEL_ID }}
+    
+  call-lighthouse-workflow:
+    needs: call-workflow
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-lighthouse.yml@main
+    secrets: inherit
+    with:
+      urls: ${{ vars.LIGHTHOUSE_URLS }}
+      
+  call-slack-message-success:
+    if: ${{ success() }}
+    needs: call-workflow
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-message.yml@main
+    secrets: inherit
+    with:
+      channelId: ${{ vars.SLACK_CHANNEL_ID }}
+      message: "Success"
+      header: "Deploy Status"
+      color: 02a12f
+          
+  call-slack-message-failure:
+    if: ${{ failure() }}
+    uses: SpiritXStorm/github-workflows/.github/workflows/slack-message.yml@main
+    secrets: inherit
+    with:
+      channelId: ${{ vars.SLACK_CHANNEL_ID }}
+      message: "ERROR"
+      header: "Deploy Status"
+      color: 992100
