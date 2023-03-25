@@ -16,6 +16,6 @@ jobs:
     uses: SpiritXStorm/github-workflows/.github/workflows/slack-lighthouse.yml@main
     secrets: inherit
     with:
-      urls: ${{ env.LIGHTHOUSE_URLS }}
+      urls: ${{ vars.LIGHTHOUSE_URLS }}
 
   
