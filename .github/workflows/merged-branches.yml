@@ -12,7 +12,7 @@ jobs:
     secrets: inherit
     with:
       channelId: ${{ vars.SLACK_CHANNEL_ID }}
-      message: "@here deploying LIVE"
+      message: "Deploying LIVE"
       
   call-workflow:
     uses: SpiritXStorm/github-workflows/.github/workflows/slack-merged-branch.yml@main
@@ -34,7 +34,9 @@ jobs:
     secrets: inherit
     with:
       channelId: ${{ vars.SLACK_CHANNEL_ID }}
-      message: "@here Deploy finished successfully"
+      message: "Success"
+      header: "Deploy Status"
+      color: 02a12f
           
   call-slack-message-failure:
     if: ${{ failure() }}
@@ -42,6 +44,8 @@ jobs:
     secrets: inherit
     with:
       channelId: ${{ vars.SLACK_CHANNEL_ID }}
-      message: "@here deploy FAILED"
+      message: "ERROR"
+      header: "Deploy Status"
+      color: 992100
 
   
