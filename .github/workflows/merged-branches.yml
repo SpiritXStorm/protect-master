@@ -29,6 +29,7 @@ jobs:
       
   call-slack-message-success:
     if: ${{ success() }}
+    needs: call-workflow
     uses: SpiritXStorm/github-workflows/.github/workflows/slack-message.yml@main
     secrets: inherit
     with:
